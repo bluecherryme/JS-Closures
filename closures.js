@@ -15,13 +15,14 @@ closure over the name variable. Invoke outer saving the return value into
 another variable called 'inner'. */
 
 // Code Here
+var inner = outer();
 
 //Once you do that, invoke inner.
 
 //Code Here
 
 
-
+inner();
 
 
 
@@ -48,11 +49,9 @@ in your console. */
 
   //Code Here
 
-
-
-
-
-
+function callJake(num){
+    return callFriend('Jake')(num);
+}
 
 
 
@@ -66,20 +65,19 @@ properly. */
 
 //Code Here
 
-//Uncomment this once you make your function
-//   var count = makeCounter();
-//   count(); // 1
-//   count(); // 2
-//   count(); // 3
-//   count(); // 4
+function makeCounter(){
+    var count = 0;
+    return function inc(){
+        count++;
+        return count;
+    }
+}
 
-
-
-
-
-
-
-
+var count = makeCounter();
+count(); // 1
+count(); // 2
+count(); // 3
+count(); // 4
 
 
 /******************************************************************************\
@@ -99,18 +97,27 @@ http://stackoverflow.com/questions/17776940/javascript-module-pattern-with-examp
 function counterFactory(value) {
 
   // Code here.
-
-
+    var val = value;
   return {
-  }
+      inc: function(){
+      val++;
+          return val;
+          
+  },
+     dec : function(){
+        val--;
+         return val;
+    }
+  };
+   
 }
 
 
 counter = counterFactory(10);
-// counter.inc() // 11
-// counter.inc() // 12
-// counter.inc() // 13
-// counter.dec() // 12
+counter.inc() // 11
+counter.inc() // 12
+counter.inc() // 13
+counter.dec() // 12
 
 
 
@@ -134,10 +141,13 @@ function motivation(firstname, lastname) {
   var welcomeText = 'You\'re doing awesome, keep it up ';
 
   // code message function here.
+    function message(){
+        return 'You\'re doing awesome, keep it up ' + firstname + ' ' + lastname + '.';
+    }
 
 
   //Uncommment this to return the value of your invoked message function
-  //return message();
+  return message();
 
 }
 
@@ -176,11 +186,14 @@ var module = (function() {
   // outside our lexical scope
   return {
     // Code here.
+      publicMethod: function(){
+          return privateMethod();
+      }
   };
 
 })();
 
-
+module.publicMethod();
 
 /******************************************************************************\
  #PROBLEM-07
@@ -195,7 +208,11 @@ var secondLevelFriends = ["Anne", "Harry", "Quinton"];
 var allUsers = ["Tom", "Dick", "Harry", "Anne", "Quinton", "Katie", "Mary"];
 
 function findPotentialFriends(existingFriends) {
-
+    
+    return function(name){
+      return (existingFriends.indexOf(name) === -1) ? true : false
+    }
+    
 }
 
 var isNotAFriend = findPotentialFriends( friends );
@@ -210,8 +227,8 @@ var isNotAFriend = findPotentialFriends( friends );
 method, find all potential second level friends as well as potential friends
 from allUsers. */
 
-var potentialSecondLevelFriends = "?";
-var allPotentialFriends = "?";
+var potentialSecondLevelFriends = secondLevelFriends.filter(curr => isNotAFriend(curr));
+var allPotentialFriends = allUsers.filter(curr => isNotAFriend(curr));
 
 
 /******************************************************************************\
@@ -235,10 +252,17 @@ to 5. What we need to do is console.log(i) so that it logs like so:
  */
 
 function timeOutCounter() {
-  for (var i = 0; i <= 5; i++) {
-    setTimeout(function() {
+    
+    function timer(i){
+        return setTimeout(function() {
     	console.log(i)
 	}, i * 1000)
+    }
+
+  for (let i = 0; i <= 5; i++) {
+    timer(i);
   }
 }
+
 timeOutCounter();
+
